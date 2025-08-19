@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Sensor Management</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-left">IoTAnalyser</div>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="add-device.html">Devices</a>
+        <a href="add-sensor.html" class="active">Sensors</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Add Sensor -->
+    <div class="card">
+        <div class="section-title">Add Sensor</div>
+        <form id="sensorForm">
+            <input id="sensorType" class="input" placeholder="Sensor Type" required>
+            <input id="sensorValue" class="input" placeholder="Value" required>
+            <input id="sensorUnit" class="input" placeholder="Unit" required>
+            <select id="sensorAnomaly" class="input">
+                <option value="false">Normal</option>
+                <option value="true">Anomaly</option>
+            </select>
+            <input id="sensorDeviceId" class="input" placeholder="Device ID" required>
+            <button type="submit" class="btn primary">Add</button>
+        </form>
+    </div>
+
+    <!-- Search by Sensor Type -->
+    <div class="card">
+        <div class="section-title">Filter by Sensor Type</div>
+        <input id="typeFilter" class="input" placeholder="Enter sensor type">
+        <button onclick="filterByType()" class="btn primary">Search</button>
+        <button onclick="loadSensors()" class="btn ghost">Reset</button>
+    </div>
+
+    <!-- Sensors Table -->
+    <div class="card">
+        <div class="section-title">Sensors</div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th><th>Type</th><th>Value</th><th>Unit</th>
+                <th>Timestamp</th><th>Anomaly</th><th>Device</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="sensorsList"><tr><td colspan="8">Loading...</td></tr></tbody>
+        </table>
+    </div>
+
+    <!-- Update Sensor -->
+    <div class="card" id="updateCard" style="display:none;">
+        <div class="section-title">Update Sensor</div>
+        <form id="updateForm">
+            <input id="updateSensorId" type="hidden">
+            <input id="updateSensorType" class="input" placeholder="Sensor Type">
+            <input id="updateSensorValue" class="input" placeholder="Value">
+            <input id="updateSensorUnit" class="input" placeholder="Unit">
+            <select id="updateSensorAnomaly" class="input">
+                <option value="false">Normal</option>
+                <option value="true">Anomaly</option>
+            </select>
+            <button type="submit" class="btn success">Update</button>
+            <button type="button" class="btn ghost" onclick="cancelUpdate()">Cancel</button>
+        </form>
+    </div>
+
+</div>
+
+<div id="toast-container"></div>
+<script src="toast.js"></script>
+<script src="scripts/sensors.js"></script>
+</body>
+</html>

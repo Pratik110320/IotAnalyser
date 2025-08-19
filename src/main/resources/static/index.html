@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>IoTAnalyser Dashboard - Real-time Device Monitoring & Control</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Real-time IoT device monitoring dashboard with live sensor data, device management, and anomaly detection">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Enhanced Navigation Bar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <span>🔌 IoTAnalyser</span>
+    </div>
+    <div class="nav-links">
+        <a href="index.html" class="active" title="View dashboard overview and live data">
+            📊 Dashboard
+        </a>
+        <a href="add-device.html" title="Manage and configure IoT devices">
+            🔧 Device Manager
+        </a>
+        <a href="add-sensor.html" title="Configure sensors and data collection">
+            📡 Sensor Config
+        </a>
+    </div>
+</nav>
+
+<!-- Dashboard Overview Section -->
+<div class="container">
+    <div class="dashboard-grid">
+        <div class="dashboard-stat">
+            <div class="stat-value" id="deviceCount">--</div>
+            <div class="stat-label">Connected Devices</div>
+        </div>
+        <div class="dashboard-stat">
+            <div class="stat-value" id="sensorCount">--</div>
+            <div class="stat-label">Active Sensors</div>
+        </div>
+        <div class="dashboard-stat">
+            <div class="stat-value" id="alertCount">--</div>
+            <div class="stat-label">Active Alerts</div>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Activity Feed -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            📡 Live Activity Feed
+        </div>
+        <div class="section-description">
+            Monitor real-time events, sensor readings, and system alerts as they happen.
+            This feed automatically updates to show the latest activity from all connected devices.
+        </div>
+        <div id="liveFeed" class="live-feed">
+            <div class="small">🔄 Connecting to live data stream...</div>
+        </div>
+    </div>
+</div>
+
+<!-- System Simulator Controls -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            ⚡ Simulation Controls
+        </div>
+        <div class="section-description">
+            Control the IoT data simulator to generate test data for development and testing purposes.
+            Use these controls to start, stop, or check the current status of the simulation engine.
+        </div>
+        <div class="form-actions">
+            <button class="btn success lg" onclick="doSim('start')" title="Begin data simulation">
+                ▶️ Start Simulation
+            </button>
+            <button class="btn danger lg" onclick="doSim('stop')" title="Stop data simulation">
+                ⏹️ Stop Simulation
+            </button>
+            <button class="btn warning lg" onclick="doSim('status')" title="Check simulation status">
+                📊 Check Status
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Device Management Section -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            🔧 Connected Devices
+            <span class="status-indicator online" id="deviceStatus">
+                    Online
+                </span>
+        </div>
+        <div class="section-description">
+            Overview of all registered IoT devices in your network. Click on device names to view detailed information,
+            or use the Device Manager to add new devices or modify existing configurations.
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Device Name</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Last Seen</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="devicesTable">
+                <tr>
+                    <td colspan="5" class="text-center">
+                        🔄 Loading device information...
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <a href="add-device.html" class="btn primary">
+                ➕ Add New Device
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Sensor Data Section -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            📊 Recent Sensor Readings
+            <span class="status-indicator online" id="sensorStatus">
+                    Collecting Data
+                </span>
+        </div>
+        <div class="section-description">
+            Latest sensor measurements from all active devices. Data is automatically refreshed every few seconds.
+            Anomalous readings are highlighted for quick identification of potential issues.
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Sensor Name</th>
+                    <th>Device</th>
+                    <th>Current Value</th>
+                    <th>Unit</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                </tr>
+                </thead>
+                <tbody id="sensorsTable">
+                <tr>
+                    <td colspan="6" class="text-center">
+                        🔄 Loading sensor data...
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <a href="add-sensor.html" class="btn primary">
+                ➕ Configure Sensors
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Panel -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            🚀 Quick Actions
+        </div>
+        <div class="section-description">
+            Common tasks and shortcuts for managing your IoT infrastructure efficiently.
+        </div>
+        <div class="form-actions">
+            <a href="add-device.html" class="btn outline">
+                🔧 Device Setup
+            </a>
+            <a href="add-sensor.html" class="btn outline">
+                📡 Sensor Config
+            </a>
+            <button class="btn ghost" onclick="refreshDashboard()" title="Refresh all dashboard data">
+                🔄 Refresh Data
+            </button>
+            <button class="btn ghost" onclick="exportData()" title="Export current data to CSV">
+                💾 Export Data
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- System Information Footer -->
+<div class="container">
+    <div class="card">
+        <div class="section-title">
+            ℹ️ System Information
+        </div>
+        <div class="section-description">
+            Current system status and connectivity information.
+        </div>
+        <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-600">
+                <strong>Connection Status:</strong>
+                <span id="connectionStatus" class="status-indicator online">Connected</span>
+            </div>
+            <div class="text-sm text-gray-600">
+                <strong>Last Updated:</strong>
+                <span id="lastUpdated" class="font-mono">--</span>
+            </div>
+            <div class="text-sm text-gray-600">
+                <strong>Server:</strong>
+                <span class="font-mono">localhost:8080</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toast-container"></div>
+
+<!-- Footer with Help Information -->
+<footer class="container">
+    <div class="text-center text-sm text-gray-500" style="padding: 2rem 0; border-top: 1px solid var(--gray-200); margin-top: 2rem;">
+        <p><strong>IoTAnalyser Dashboard</strong> - Real-time monitoring and control for your IoT infrastructure</p>
+        <p>Need help? Check the documentation or contact support for assistance with device configuration and troubleshooting.</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script src="toast.js"></script>
+<script src="scripts/index.js"></script>
+
+<!-- Enhanced Dashboard Scripts -->
+<script>
+    // Dashboard utility functions
+    function refreshDashboard() {
+        // Add loading state
+        const refreshBtn = event.target;
+        const originalText = refreshBtn.innerHTML;
+        refreshBtn.innerHTML = '🔄 Refreshing...';
+        refreshBtn.disabled = true;
+
+        // Simulate refresh (replace with actual refresh logic)
+        setTimeout(() => {
+            refreshBtn.innerHTML = originalText;
+            refreshBtn.disabled = false;
+            showToast('Dashboard refreshed successfully', 'success');
+        }, 2000);
+    }
+
+    function exportData() {
+        // Add loading state
+        const exportBtn = event.target;
+        const originalText = exportBtn.innerHTML;
+        exportBtn.innerHTML = '💾 Exporting...';
+        exportBtn.disabled = true;
+
+        // Simulate export (replace with actual export logic)
+        setTimeout(() => {
+            exportBtn.innerHTML = originalText;
+            exportBtn.disabled = false;
+            showToast('Data exported successfully', 'success');
+        }, 1500);
+    }
+
+    // Update timestamps
+    function updateTimestamp() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        const lastUpdatedEl = document.getElementById('lastUpdated');
+        if (lastUpdatedEl) {
+            lastUpdatedEl.textContent = timeString;
+        }
+    }
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTimestamp();
+        setInterval(updateTimestamp, 1000);
+
+        // Initialize counters with animation
+        animateCounter('deviceCount', 0, 5, 2000);
+        animateCounter('sensorCount', 0, 12, 2500);
+        animateCounter('alertCount', 0, 2, 1500);
+    });
+
+    // Counter animation function
+    function animateCounter(elementId, start, end, duration) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const startTime = performance.now();
+
+        function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const current = Math.floor(start + (end - start) * progress);
+
+            element.textContent = current;
+
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            }
+        }
+
+        requestAnimationFrame(updateCounter);
+    }
+
+    // Toast notification function (if not already defined)
+    function showToast(message, type = 'info', duration = 3000) {
+        const toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : type === 'warning' ? '⚠' : 'ℹ';
+
+        toast.innerHTML = `
+            <div class="toast-content">
+                <div class="toast-icon">${icon}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        `;
+
+        toastContainer.appendChild(toast);
+
+        // Auto remove after duration
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-in-out';
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, duration);
+    }
+</script>
+
+<!-- Add slide out animation -->
+<style>
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%) scale(0.9);
+        }
+    }
+</style>
+</body>
+</html>

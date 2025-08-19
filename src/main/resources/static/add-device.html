@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Device Management</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-left">IoTAnalyser</div>
+    <div class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="add-device.html" class="active">Devices</a>
+        <a href="add-sensor.html">Sensors</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Add Device -->
+    <div class="card">
+        <div class="section-title">Add Device</div>
+        <form id="deviceForm">
+            <input id="deviceName" class="input" placeholder="Device Name" required>
+            <input id="deviceType" class="input" placeholder="Device Type" required>
+            <button type="submit" class="btn primary">Add</button>
+        </form>
+    </div>
+
+    <!-- Search by Status -->
+    <div class="card">
+        <div class="section-title">Filter Devices by Status</div>
+        <select id="statusFilter" class="input">
+            <option value="">-- Select Status --</option>
+            <option value="ONLINE">ONLINE</option>
+            <option value="OFFLINE">OFFLINE</option>
+            <option value="DISCONNECTED">DISCONNECTED</option>
+            <option value="UNKNOWN">UNKNOWN</option>
+        </select>
+        <button onclick="filterByStatus()" class="btn primary">Search</button>
+        <button onclick="loadDevices()" class="btn ghost">Reset</button>
+    </div>
+
+    <!-- Devices Table -->
+    <div class="card">
+        <div class="section-title">Devices</div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th><th>Name</th><th>Type</th>
+                <th>Registered</th><th>Last Active</th><th>Status</th><th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="devicesList"><tr><td colspan="7">Loading...</td></tr></tbody>
+        </table>
+    </div>
+
+    <!-- Update Device -->
+    <div class="card" id="updateCard" style="display:none;">
+        <div class="section-title">Update Device</div>
+        <form id="updateForm">
+            <input id="updateDeviceId" type="hidden">
+            <input id="updateDeviceName" class="input" placeholder="Device Name">
+            <input id="updateDeviceType" class="input" placeholder="Device Type">
+            <select id="updateDeviceStatus" class="input">
+                <option value="ONLINE">ONLINE</option>
+                <option value="OFFLINE">OFFLINE</option>
+                <option value="DISCONNECTED">DISCONNECTED</option>
+                <option value="UNKNOWN">UNKNOWN</option>
+            </select>
+            <button type="submit" class="btn success">Update</button>
+            <button type="button" class="btn ghost" onclick="cancelUpdate()">Cancel</button>
+        </form>
+    </div>
+
+</div>
+
+<div id="toast-container"></div>
+<script src="toast.js"></script>
+<script src="scripts/devices.js"></script>
+</body>
+</html>
