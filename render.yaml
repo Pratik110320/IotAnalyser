@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: iotanalyser
+    env: docker
+    branch: main
+    plan: starter
+    buildCommand: ""
+    startCommand: ""   # Dockerfile ENTRYPOINT will run
+    dockerfilePath: ./iotanalyser/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: h2
+  - type: worker
+    name: devicesimulator
+    env: docker
+    branch: main
+    plan: starter
+    dockerfilePath: ./devicesimulator/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: h2
+      - key: SIMULATOR_TARGET_URL
+        value: http://iotanalyser:8080/sensor
+      - key: SIMULATOR_DEVICE_REGISTRATION_URL
+        value: http://iotanalyser:8080/device
+      - key: SIMULATOR_WEBSOCKET_URL
+        value: ws://iotanalyser:8080/ws-sensor-data
+      - key: SIMULATOR_DEVICE_COUNT
+        value: "3"
