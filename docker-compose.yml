@@ -1,0 +1,31 @@
+services:
+  iotanalyser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=h2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  devicesimulator:
+    build:
+      context: ../DeviceSimulator
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"         # <--- host:container mapping corrected
+    environment:
+      - SPRING_PROFILES_ACTIVE=h2
+      - SIMULATOR_TARGET_URL=http://iotanalyser:8080/sensor
+      - SIMULATOR_DEVICE_REGISTRATION_URL=http://iotanalyser:8080/device
+      - SIMULATOR_WEBSOCKET_URL=ws://iotanalyser:8080/ws-sensor-data
+      - SIMULATOR_DEVICE_COUNT=3
+    depends_on:
+      - iotanalyser
+    restart: unless-stopped

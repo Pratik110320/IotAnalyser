@@ -11,14 +11,24 @@ public class SensorData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "sensor_value", nullable = false)
     private Double value;
+
+    @Column(name = "sensor_type", length = 100, nullable = false)
     private String sensorType;
+
+    @Column(name = "unit", length = 50)
     private String unit;
+
+    @Column(name = "event_timestamp", nullable = false)
     private LocalDateTime timestamp;
+
+    @Column(name = "anomaly")
     private Boolean anomaly;
 
-    @ManyToOne
-    @JoinColumn(name = "device_id")
+    @ManyToOne(fetch = FetchType.LAZY) // avoid loading full Device unless needed
+    @JoinColumn(name = "device_id", nullable = false)
     private Device device;
 
     public Long getId() {

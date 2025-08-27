@@ -1,8 +1,10 @@
 package com.pratik.IotAnalyser.service;
 
 import com.pratik.IotAnalyser.dtos.sensorDto.*;
+import com.pratik.IotAnalyser.model.Device;
 import com.pratik.IotAnalyser.model.SensorData;
 import com.pratik.IotAnalyser.exception.ResourceNotFoundException;
+import com.pratik.IotAnalyser.repository.DeviceRepository;
 import com.pratik.IotAnalyser.repository.SensorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,13 +20,14 @@ public class SensorDataService {
 
     private final SensorRepository sensorRepository;
     private final SensorMapper sensorMapper;
+    private final DeviceRepository deviceRepository;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
-    public SensorDataService(SensorRepository sensorRepository,SensorMapper sensorMapper) {
+    public SensorDataService(SensorRepository sensorRepository, SensorMapper sensorMapper, DeviceRepository deviceRepository) {
         this.sensorRepository = sensorRepository;
         this.sensorMapper = sensorMapper;
+        this.deviceRepository = deviceRepository;
     }
-
 
 
     @Transactional
@@ -33,9 +36,21 @@ public class SensorDataService {
             throw new IllegalArgumentException("Sensor Registration Data can't be null.");
         }
 
+        // Map incoming DTO → Entity
         SensorData sensorData = sensorMapper.toEntity(sensorRegistrationDto);
         sensorData.setTimestamp(LocalDateTime.now());
 
+        // 🔑 Ensure device is set from DB
+        if (sensorRegistrationDto.getDeviceId() != null) {
+            Device device = deviceRepository.findById(sensorRegistrationDto.getDeviceId())
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Device not found with id " + sensorRegistrationDto.getDeviceId()));
+            sensorData.setDevice(device);
+        } else {
+            throw new IllegalArgumentException("Device ID is required.");
+        }
+
+        // Save sensor data
         SensorData savedSensor = sensorRepository.save(sensorData);
 
         // Broadcast saved data to WebSocket subscribers
